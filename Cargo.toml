@@ -1,0 +1,23 @@
+[package]
+name = "hirareca"
+version = "0.1.0"
+authors = ["sinkuu <sinkuupump@gmail.com>"]
+
+[dependencies]
+futures = "0.1.10"
+tokio-core = "0.1.4"
+tokio-proto = "0.1.0"
+tokio-service = "0.1.0"
+tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp/" }
+tokio-curl = "0.1.9"
+url = "1.4.0"
+curl = "0.4.5"
+serde = "0.9.7"
+serde_derive = "0.9.7"
+serde_json = "0.9.6"
+xml-rs = { git = "https://github.com/sinkuu/xml-rs/", branch = "matome" }
+error-chain = "0.9.0"
+xdg = "2.0.0"
+toml = "0.3.0"
+log = "0.3.6"
+env_logger = "0.4.0"
