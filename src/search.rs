@@ -34,7 +34,11 @@ pub struct Item {
 }
 
 pub enum ListFuture {
-    Configuring { session: Session, word: String, config: Arc<Config> },
+    Configuring {
+        session: Session,
+        word: String,
+        config: Arc<Config>,
+    },
     Performing {
         perform: Perform,
         dump: Arc<Mutex<Vec<u8>>>,
@@ -89,9 +93,7 @@ impl Future for ListFuture {
                 let mut res = if let Async::Ready(res) = perform.poll()? {
                     res
                 } else {
-                    *self = ListFuture::Performing {
-                        perform, dump,
-                    };
+                    *self = ListFuture::Performing { perform, dump };
                     return Ok(Async::NotReady);
                 };
                 let code = res.response_code().chain_err(|| "Failed to obtain response code")?;
@@ -101,7 +103,9 @@ impl Future for ListFuture {
                     let dump = Arc::try_unwrap(dump)
                         .map_err(|_| Error::from_kind("Arc should have been dropped".into()))?;
                     let dump = dump.into_inner()
-                        .map_err(|_| Error::from_kind("Mutex guards should have been dropped".into()))?;
+                        .map_err(|_| {
+                            Error::from_kind("Mutex guards should have been dropped".into())
+                        })?;
                     Ok(Async::Ready(serde_json::from_slice(&dump)?))
                 } else {
                     let msg = format!("curl failed, response code = {}", code);

@@ -2,7 +2,8 @@
 
 extern crate xml;
 extern crate serde;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate serde_derive;
 extern crate serde_json;
 extern crate futures;
 extern crate tokio_core;
@@ -51,20 +52,21 @@ use error::*;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
+    pub port: u16,
     pub api_key: String,
     pub custom_engine_id: String,
 }
 
 fn run() -> Result<()> {
     if env::var("RUST_LOG").is_err() {
-        use log::LogLevelFilter;
-        use env_logger::LogBuilder;
-        let mut builder = LogBuilder::new();
-        builder.filter(Some("hirareca"), LogLevelFilter::Info);
-        builder.init()
-    } else {
-        env_logger::init()
-    }.chain_err(|| "Failed to initialize logger")?;
+            use log::LogLevelFilter;
+            use env_logger::LogBuilder;
+            let mut builder = LogBuilder::new();
+            builder.filter(Some("hirareca"), LogLevelFilter::Info);
+            builder.init()
+        } else {
+            env_logger::init()
+        }.chain_err(|| "Failed to initialize logger")?;
 
     let xdg_dirs = xdg::BaseDirectories::with_prefix("hirareca")
         .chain_err(|| "Failed to obtain configuration directory")?;
@@ -72,10 +74,10 @@ fn run() -> Result<()> {
         .chain_err(|| "Failed to create configuration directory")?;
 
     if !config_path.exists() {
-        let mut f = File::create(&config_path)
-            .chain_err(|| "Failed to create configuration file")?;
+        let mut f = File::create(&config_path).chain_err(|| "Failed to create configuration file")?;
         write!(f,
-r#"# API Key (see https://console.cloud.google.com/apis/dashboard)
+               r#"port = 8091
+# API Key (see https://console.cloud.google.com/apis/dashboard)
 api_key = ""
 # Custom search engine id (see https://cse.google.com/cse/all)
 custom_engine_id = """#)?;

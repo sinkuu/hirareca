@@ -14,6 +14,7 @@ use xml::writer::EmitterConfig;
 use std::io;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use std::net::{SocketAddr, IpAddr, Ipv4Addr};
 
 struct SearchRssServer(Arc<Mutex<Session>>, Arc<Config>);
 
@@ -83,10 +84,9 @@ impl Service for SearchRssServer {
 }
 
 pub fn serve(cfg: ::Config) {
-    let cfg = Arc::new(cfg);
-
-    let addr = "0.0.0.0:8091".parse().unwrap();
+    let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), cfg.port);
     let srv = TcpServer::new(Http, addr);
+    let cfg = Arc::new(cfg);
     srv.with_handle(move |handle| {
         let session = Arc::new(Mutex::new(Session::new(handle.clone())));
         let cfg = cfg.clone();
