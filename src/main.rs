@@ -55,6 +55,7 @@ pub struct Config {
     pub port: u16,
     pub api_key: String,
     pub custom_engine_id: String,
+    pub cache_num: usize,
 }
 
 fn run() -> Result<()> {
@@ -80,7 +81,9 @@ fn run() -> Result<()> {
 # API Key (see https://console.cloud.google.com/apis/dashboard)
 api_key = ""
 # Custom search engine id (see https://cse.google.com/cse/all)
-custom_engine_id = """#)?;
+custom_engine_id = ""
+# Number of search response LRU cache
+cache_num = 100"#)?;
         info!("Fill configuration file at {}", config_path.display());
         return Ok(());
     }
